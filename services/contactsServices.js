@@ -11,8 +11,7 @@ async function listContacts() {
 }
 
 async function getContactById(contactId) {
-  const isInvalidId = isNaN(parseInt(contactId, 10));
-  if (isInvalidId) {
+  if (isInvalidId(contactId)) {
     console.log(`Invalid id ${contactId}`);
     return null;
   }
@@ -27,17 +26,21 @@ async function getContactById(contactId) {
 }
 
 async function removeContact(contactId) {
-  const allContacts = JSON.parse(await fs.readFile(contactsPath));
+  if (isInvalidId(contactId)) {
+    console.log(`Invalid id ${contactId}`);
+    return null;
+  }
 
-  let removedContact = null;
-  const updatedContacts = allContacts.filter((element) => {
-    const isContactToDelete = element.id === contactId;
-    if (isContactToDelete) removedContact = element;
-    return !isContactToDelete;
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
+
+  await Contact.destroy({
+    where: {
+      id: contactId,
+    },
   });
 
-  await fs.writeFile(contactsPath, JSON.stringify(updatedContacts, null, 2));
-  return removedContact;
+  return contact;
 }
 
 async function addContact(name, email, phone) {
@@ -68,6 +71,10 @@ async function updateContact(id, name, email, phone) {
 
   await fs.writeFile(contactsPath, JSON.stringify(updatedContacts, null, 2));
   return contact;
+}
+
+function isInvalidId(contactId) {
+  return isNaN(parseInt(contactId, 10));
 }
 
 export {

@@ -42,9 +42,7 @@ export const deleteContact = async (req, res) => {
     res.json({
       status: "success",
       code: 200,
-      data: {
-        contact: contact,
-      },
+      data: contact,
     });
   } else {
     res.status(404).json({ message: "Not found" });
@@ -94,9 +92,7 @@ export const updateContact = async (req, res) => {
     res.json({
       status: "success",
       code: 200,
-      data: {
-        contact: contact,
-      },
+      data: contact,
     });
   } else {
     res.status(404).json({ message: "Not found" });
