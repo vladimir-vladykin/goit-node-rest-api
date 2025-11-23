@@ -1,9 +1,4 @@
-import { promises as fs } from "fs";
-import { join } from "path";
 import { Contact } from "../db/db.js";
-
-// TODO remove
-const contactsPath = join("db", "contacts.json");
 
 async function listContacts() {
   const contacts = await Contact.findAll();
@@ -54,22 +49,17 @@ async function addContact(name, email, phone) {
 }
 
 async function updateContact(id, name, email, phone) {
-  const contact = await getContactById(id);
-
-  if (!contact) {
+  if (isInvalidId(id)) {
+    console.log(`Invalid id ${id}`);
     return null;
   }
 
+  const contact = await getContactById(id);
   if (name) contact.name = name;
   if (email) contact.email = email;
   if (phone) contact.phone = phone;
 
-  const allContacts = await listContacts();
-  const updatedContacts = allContacts.map((element) => {
-    return element.id == id ? contact : element;
-  });
-
-  await fs.writeFile(contactsPath, JSON.stringify(updatedContacts, null, 2));
+  await contact.save();
   return contact;
 }
 
