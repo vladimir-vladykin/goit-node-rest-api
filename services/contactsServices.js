@@ -1,18 +1,28 @@
 import { promises as fs } from "fs";
 import { join } from "path";
-import { nanoid } from "nanoid";
-import { Contact } from "../db/db.js"
+import { Contact } from "../db/db.js";
 
+// TODO remove
 const contactsPath = join("db", "contacts.json");
 
 async function listContacts() {
-  const contacts = JSON.parse(await fs.readFile(contactsPath));
+  const contacts = await Contact.findAll();
   return contacts;
 }
 
 async function getContactById(contactId) {
-  const allContacts = JSON.parse(await fs.readFile(contactsPath));
-  const contact = allContacts.find((element) => element.id === contactId);
+  const isInvalidId = isNaN(parseInt(contactId, 10));
+  if (isInvalidId) {
+    console.log(`Invalid id ${contactId}`);
+    return null;
+  }
+
+  const contact = await Contact.findOne({
+    where: {
+      id: contactId,
+    },
+  });
+
   return contact || null;
 }
 
@@ -31,17 +41,12 @@ async function removeContact(contactId) {
 }
 
 async function addContact(name, email, phone) {
-  const contact = {
-    id: nanoid(),
+  const contact = await Contact.create({
     name: name,
     email: email,
     phone: phone,
-  };
+  });
 
-  const allContacts = await listContacts();
-  const updatedContacts = [...allContacts, contact];
-
-  await fs.writeFile(contactsPath, JSON.stringify(updatedContacts, null, 2));
   return contact;
 }
 

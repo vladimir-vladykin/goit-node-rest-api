@@ -30,3 +30,8 @@ export const Contact = sequelize.define("contact", {
     defaultValue: false,
   },
 });
+
+// create table in DB if needed
+(async () => {
+  await sequelize.sync({});
+})();

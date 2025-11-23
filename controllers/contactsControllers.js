@@ -15,9 +15,7 @@ export const getAllContacts = async (req, res) => {
   res.json({
     status: "success",
     code: 200,
-    data: {
-      contacts: contacts,
-    },
+    data: contacts,
   });
 };
 
@@ -29,9 +27,7 @@ export const getOneContact = async (req, res) => {
     res.json({
       status: "success",
       code: 200,
-      data: {
-        contact: contact,
-      },
+      data: contact,
     });
   } else {
     res.status(404).json({ message: "Not found" });
@@ -70,9 +66,7 @@ export const createContact = async (req, res) => {
   res.status(201).json({
     status: "success",
     code: 201,
-    data: {
-      contact: contact,
-    },
+    data: contact,
   });
 };
 
