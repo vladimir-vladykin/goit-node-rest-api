@@ -4,10 +4,12 @@ import {
   listContacts,
   removeContact,
   updateContact as editContact,
+  updateIsFavorite,
 } from "../services/contactsServices.js";
 import {
   createContactSchema,
   updateContactSchema,
+  updateContactStatusSchema,
 } from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res) => {
@@ -88,6 +90,30 @@ export const updateContact = async (req, res) => {
 
   const contact = await editContact(id, name, email, phone);
 
+  if (contact) {
+    res.json({
+      status: "success",
+      code: 200,
+      data: contact,
+    });
+  } else {
+    res.status(404).json({ message: "Not found" });
+  }
+};
+
+export const updateStatusContact = async (req, res) => {
+  const { error } = updateContactStatusSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+    return;
+  }
+
+  const { id } = req.params;
+  const { favorite } = req.body;
+
+  const contact = await updateIsFavorite(id, favorite);
   if (contact) {
     res.json({
       status: "success",

@@ -55,9 +55,26 @@ async function updateContact(id, name, email, phone) {
   }
 
   const contact = await getContactById(id);
+  if (!contact) return null;
+
   if (name) contact.name = name;
   if (email) contact.email = email;
   if (phone) contact.phone = phone;
+
+  await contact.save();
+  return contact;
+}
+
+async function updateIsFavorite(contactId, favorite) {
+  if (isInvalidId(contactId)) {
+    console.log(`Invalid id ${contactId}`);
+    return null;
+  }
+
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
+
+  contact.favorite = favorite;
 
   await contact.save();
   return contact;
@@ -73,4 +90,5 @@ export {
   removeContact,
   addContact,
   updateContact,
+  updateIsFavorite,
 };
