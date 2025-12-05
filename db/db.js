@@ -29,6 +29,31 @@ export const Contact = sequelize.define("contact", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  owner: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+});
+
+export const User = sequelize.define("users", {
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  subscription: {
+    type: DataTypes.ENUM,
+    values: ["starter", "pro", "business"],
+    defaultValue: "starter",
+  },
+  token: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+  },
 });
 
 // create table in DB if needed
