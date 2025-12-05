@@ -17,23 +17,19 @@ export const register = async (req, res, next) => {
   const user = await getUserByEmail(email);
   if (user) {
     res.status(409).json({
-      status: "error",
-      code: 409,
-      message: "Email is already in use",
-      data: "Conflict",
+      message: "Email in use",
     });
     return;
   }
 
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    await createUser(email, hashedPassword);
+    const { subscription } = await createUser(email, hashedPassword);
 
     res.status(201).json({
-      status: "success",
-      code: 201,
-      data: {
-        message: "Registration successful",
+      user: {
+        email: email,
+        subscription: subscription,
       },
     });
   } catch (error) {
