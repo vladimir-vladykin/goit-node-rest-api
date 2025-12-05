@@ -17,4 +17,10 @@ async function createUser(email, hashedPassword) {
   return user;
 }
 
-export { getUserByEmail, createUser };
+async function updateUserToken(user, token) {
+  user.token = token;
+  await user.save();
+  return user;
+}
+
+export { getUserByEmail, createUser, updateUserToken };
