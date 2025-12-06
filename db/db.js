@@ -1,8 +1,8 @@
 import { Sequelize, DataTypes } from "sequelize";
+import "dotenv/config";
 
-const sequelize = new Sequelize(
-  "postgresql://db_contacts_hloo_user:rhCOXk3Ksg0E1wFZQnm98sSOqTcUQorY@dpg-d4h32ifdiees73b9sq3g-a.frankfurt-postgres.render.com/db_contacts_hloo?sslmode=no-verify"
-);
+const db_url = process.env.DB_URL;
+const sequelize = new Sequelize(db_url);
 
 try {
   await sequelize.authenticate();
