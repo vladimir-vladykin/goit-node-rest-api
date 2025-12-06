@@ -9,7 +9,7 @@ async function listContacts(userId) {
   return contacts;
 }
 
-async function getContactById(contactId) {
+async function getContactById(userId, contactId) {
   if (isInvalidId(contactId)) {
     console.log(`Invalid id ${contactId}`);
     return null;
@@ -18,24 +18,26 @@ async function getContactById(contactId) {
   const contact = await Contact.findOne({
     where: {
       id: contactId,
+      owner: userId,
     },
   });
 
   return contact || null;
 }
 
-async function removeContact(contactId) {
+async function removeContact(userId, contactId) {
   if (isInvalidId(contactId)) {
     console.log(`Invalid id ${contactId}`);
     return null;
   }
 
-  const contact = await getContactById(contactId);
+  const contact = await getContactById(userId, contactId);
   if (!contact) return null;
 
   await Contact.destroy({
     where: {
       id: contactId,
+      owner: userId,
     },
   });
 
@@ -53,13 +55,13 @@ async function addContact(userId, name, email, phone) {
   return contact;
 }
 
-async function updateContact(id, name, email, phone) {
+async function updateContact(userId, id, name, email, phone) {
   if (isInvalidId(id)) {
     console.log(`Invalid id ${id}`);
     return null;
   }
 
-  const contact = await getContactById(id);
+  const contact = await getContactById(userId, id);
   if (!contact) return null;
 
   if (name) contact.name = name;
@@ -70,13 +72,13 @@ async function updateContact(id, name, email, phone) {
   return contact;
 }
 
-async function updateIsFavorite(contactId, favorite) {
+async function updateIsFavorite(userId, contactId, favorite) {
   if (isInvalidId(contactId)) {
     console.log(`Invalid id ${contactId}`);
     return null;
   }
 
-  const contact = await getContactById(contactId);
+  const contact = await getContactById(userId, contactId);
   if (!contact) return null;
 
   contact.favorite = favorite;

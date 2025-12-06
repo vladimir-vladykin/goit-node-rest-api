@@ -13,8 +13,8 @@ import {
 } from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res) => {
-  const { id } = req.user;
-  const contacts = await listContacts(id);
+  const { id: userId } = req.user;
+  const contacts = await listContacts(userId);
   res.json({
     status: "success",
     code: 200,
@@ -23,8 +23,9 @@ export const getAllContacts = async (req, res) => {
 };
 
 export const getOneContact = async (req, res) => {
+  const { id: userId } = req.user;
   const { id } = req.params;
-  const contact = await getContactById(id);
+  const contact = await getContactById(userId, id);
 
   if (contact) {
     res.json({
@@ -38,8 +39,9 @@ export const getOneContact = async (req, res) => {
 };
 
 export const deleteContact = async (req, res) => {
+  const { id: userId } = req.user;
   const { id } = req.params;
-  const contact = await removeContact(id);
+  const contact = await removeContact(userId, id);
 
   if (contact) {
     res.json({
@@ -61,8 +63,7 @@ export const createContact = async (req, res) => {
     return;
   }
 
-  const user = req.user;
-  const userId = user.id;
+  const { id: userId } = req.user;
 
   const { name, email, phone } = req.body;
   const contact = await addContact(userId, name, email, phone);
@@ -83,6 +84,7 @@ export const updateContact = async (req, res) => {
     return;
   }
 
+  const { id: userId } = req.user;
   const { id } = req.params;
   const { name, email, phone } = req.body;
   if (!name && !email && !phone) {
@@ -92,7 +94,7 @@ export const updateContact = async (req, res) => {
     return;
   }
 
-  const contact = await editContact(id, name, email, phone);
+  const contact = await editContact(userId, id, name, email, phone);
 
   if (contact) {
     res.json({
@@ -114,10 +116,11 @@ export const updateStatusContact = async (req, res) => {
     return;
   }
 
+  const { id: userId } = req.user;
   const { id } = req.params;
   const { favorite } = req.body;
 
-  const contact = await updateIsFavorite(id, favorite);
+  const contact = await updateIsFavorite(userId, id, favorite);
   if (contact) {
     res.json({
       status: "success",
