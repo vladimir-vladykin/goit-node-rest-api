@@ -7,16 +7,17 @@ import {
   updateContact,
   updateStatusContact
 } from "../controllers/contactsControllers.js";
+import { auth } from "../services/tokens.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", auth, getAllContacts);
 
 contactsRouter.get("/:id", getOneContact);
 
 contactsRouter.delete("/:id", deleteContact);
 
-contactsRouter.post("/", createContact);
+contactsRouter.post("/", auth, createContact);
 
 contactsRouter.put("/:id", updateContact);
 

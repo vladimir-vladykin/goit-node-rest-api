@@ -5,6 +5,7 @@ import cors from "cors";
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRoutes.js";
 
+
 const app = express();
 
 app.use(morgan("tiny"));

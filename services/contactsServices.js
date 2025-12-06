@@ -1,7 +1,11 @@
 import { Contact } from "../db/db.js";
 
-async function listContacts() {
-  const contacts = await Contact.findAll();
+async function listContacts(userId) {
+  const contacts = await Contact.findAll({
+    where: {
+      owner: userId,
+    },
+  });
   return contacts;
 }
 
@@ -38,11 +42,12 @@ async function removeContact(contactId) {
   return contact;
 }
 
-async function addContact(name, email, phone) {
+async function addContact(userId, name, email, phone) {
   const contact = await Contact.create({
     name: name,
     email: email,
     phone: phone,
+    owner: userId,
   });
 
   return contact;

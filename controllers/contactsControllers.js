@@ -13,7 +13,8 @@ import {
 } from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res) => {
-  const contacts = await listContacts();
+  const { id } = req.user;
+  const contacts = await listContacts(id);
   res.json({
     status: "success",
     code: 200,
@@ -60,8 +61,11 @@ export const createContact = async (req, res) => {
     return;
   }
 
+  const user = req.user;
+  const userId = user.id;
+
   const { name, email, phone } = req.body;
-  const contact = await addContact(name, email, phone);
+  const contact = await addContact(userId, name, email, phone);
 
   res.status(201).json({
     status: "success",
