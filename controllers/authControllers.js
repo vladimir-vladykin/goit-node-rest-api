@@ -86,3 +86,12 @@ export const logout = async (req, res) => {
 
   res.status(204).json();
 };
+
+export const currentUser = async (req, res) => {
+  const user = req.user;
+
+  res.status(200).json({
+    email: user.email,
+    subscription: user.subscription,
+  });
+};

@@ -15,7 +15,7 @@ const params = {
 passport.use(
   new Strategy(params, async function (payload, done) {
     const id = payload.id;
-    
+
     const user = await User.findOne({
       where: {
         id: payload.id,
@@ -36,10 +36,7 @@ const auth = (req, res, next) => {
     if (!user || err) {
       console.log(err);
       return res.status(401).json({
-        status: "error",
-        code: 401,
-        message: "Unauthorized",
-        data: "Unauthorized",
+        message: "Not authorized",
       });
     }
 
