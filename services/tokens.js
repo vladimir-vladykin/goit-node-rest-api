@@ -15,7 +15,7 @@ const params = {
 passport.use(
   new Strategy(params, async function (payload, done) {
     const id = payload.id;
-    console.log(`Trying to find user with id ${id} from jwt token`);
+    
     const user = await User.findOne({
       where: {
         id: payload.id,
@@ -26,6 +26,7 @@ passport.use(
       done(new Error("User not found"));
       return;
     }
+
     done(null, user);
   })
 );

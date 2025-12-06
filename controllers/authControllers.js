@@ -79,3 +79,10 @@ export const login = async (req, res) => {
     },
   });
 };
+
+export const logout = async (req, res) => {
+  const user = req.user;
+  await updateUserToken(user, null);
+
+  res.status(204).json();
+};
