@@ -5,6 +5,7 @@ import {
   createUser,
   updateUserToken,
 } from "../services/authServices.js";
+import gravatar from "gravatar";
 import bcrypt from "bcrypt";
 import { createUserToken } from "../services/tokens.js";
 const saltRounds = 10;
@@ -29,7 +30,8 @@ export const register = async (req, res, next) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const { subscription } = await createUser(email, hashedPassword);
+    const avatarURL = gravatar.url(email, { protocol: "https" });
+    const { subscription } = await createUser(email, hashedPassword, avatarURL);
 
     res.status(201).json({
       user: {

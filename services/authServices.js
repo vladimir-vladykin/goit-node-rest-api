@@ -8,10 +8,11 @@ async function getUserByEmail(email) {
   });
 }
 
-async function createUser(email, hashedPassword) {
+async function createUser(email, hashedPassword, avatarURL) {
   const user = await User.create({
     email: email,
     password: hashedPassword,
+    avatarURL: avatarURL,
   });
 
   return user;
