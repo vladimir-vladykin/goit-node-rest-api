@@ -1,3 +1,6 @@
+# temp dir for files
+temp
+
 # Logs
 logs
 *.log

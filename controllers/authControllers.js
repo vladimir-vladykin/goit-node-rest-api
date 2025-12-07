@@ -1,13 +1,14 @@
-import { User } from "../db/db.js";
 import { authSchema } from "../schemas/authSchemas.js";
 import {
   getUserByEmail,
   createUser,
   updateUserToken,
+  updateUserAvatarURL,
 } from "../services/authServices.js";
 import gravatar from "gravatar";
 import bcrypt from "bcrypt";
 import { createUserToken } from "../services/tokens.js";
+import { saveFile } from "../services/uploadFiles.js";
 const saltRounds = 10;
 
 export const register = async (req, res, next) => {
@@ -96,4 +97,18 @@ export const currentUser = async (req, res) => {
     email: user.email,
     subscription: user.subscription,
   });
+};
+
+export const updateAvatar = async (req, res, next) => {
+  const { id } = req.user;
+
+  try {
+    const avatarURL = await saveFile(id, req.file);
+    await updateUserAvatarURL(id, avatarURL);
+    res.json({
+      avatarURL: avatarURL,
+    });
+  } catch (err) {
+    return next(err);
+  }
 };

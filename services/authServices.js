@@ -24,4 +24,17 @@ async function updateUserToken(user, token) {
   return user;
 }
 
-export { getUserByEmail, createUser, updateUserToken };
+async function updateUserAvatarURL(userId, avatarURL) {
+  const user = await User.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user) {
+    user.avatarURL = avatarURL;
+    await user.save();
+  }
+}
+
+export { getUserByEmail, createUser, updateUserToken, updateUserAvatarURL };

@@ -5,6 +5,7 @@ import { dirname, join } from "path";
 
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRoutes.js";
+import { createDefaultFolders } from "./services/uploadFiles.js";
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(3000, () => {
+  createDefaultFolders();
   console.log("Server is running. Use our API on port: 3000");
 });
