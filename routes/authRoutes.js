@@ -4,6 +4,7 @@ import {
   login,
   logout,
   register,
+  resendVerification,
   updateAvatar,
   verifyUser,
 } from "../controllers/authControllers.js";
@@ -17,5 +18,6 @@ authRouter.post("/logout", auth, logout);
 authRouter.get("/current", auth, currentUser);
 authRouter.patch("/avatars", auth, upload.single("avatar"), updateAvatar);
 authRouter.get("/verify/:verificationToken", verifyUser);
+authRouter.post("/verify", resendVerification)
 
 export default authRouter;

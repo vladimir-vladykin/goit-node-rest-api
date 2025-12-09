@@ -1,4 +1,4 @@
-import { authSchema } from "../schemas/authSchemas.js";
+import { authSchema, verifyEmailSchema } from "../schemas/authSchemas.js";
 import {
   getUserByEmail,
   createUser,
@@ -148,6 +148,37 @@ export const verifyUser = async (req, res) => {
     message: "Verification successful",
   });
 };
+
+export const resendVerification = async (req, res) => {
+  const { error } = verifyEmailSchema.validate(req.body);
+  if (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+    return;
+  }
+
+  const { email } = req.body;
+
+  const user = await getUserByEmail(email);
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  if (user.verify) {
+    return res.status(400).json({
+      message: "Verification has already been passed",
+    });
+  }
+
+
+  sendVerificationEmail(email, getBaseUrl(req), user.verificationToken);
+  res.status(200).json({
+    message: "Verification email sent",
+  });
+}
 
 function getBaseUrl(req) {
   const protocol = req.protocol;

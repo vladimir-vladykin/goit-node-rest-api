@@ -9,3 +9,9 @@ export const authSchema = Joi.object({
     }),
   password: Joi.string().required(),
 });
+
+export const verifyEmailSchema = Joi.object({
+  email: Joi.string().required().email({
+    minDomainSegments: 2,
+  }),
+});
