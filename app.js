@@ -1,7 +1,6 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import { dirname, join } from "path";
 
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRoutes.js";
