@@ -4,6 +4,8 @@ import {
   createUser,
   updateUserToken,
   updateUserAvatarURL,
+  getUserByVerifycationToken,
+  markUserAsVerified,
 } from "../services/authServices.js";
 import gravatar from "gravatar";
 import bcrypt from "bcrypt";
@@ -111,4 +113,20 @@ export const updateAvatar = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
+};
+
+export const verifyUser = async (req, res) => {
+  const { verificationToken } = req.params;
+  const user = await getUserByVerifycationToken(verificationToken);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  await markUserAsVerified(user);
+  res.status(200).json({
+    message: "Verification successful",
+  });
 };

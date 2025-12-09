@@ -8,6 +8,14 @@ async function getUserByEmail(email) {
   });
 }
 
+async function getUserByVerifycationToken(verificationToken) {
+  return await User.findOne({
+    where: {
+      verificationToken: verificationToken,
+    },
+  });
+}
+
 async function createUser(email, hashedPassword, avatarURL) {
   const user = await User.create({
     email: email,
@@ -37,4 +45,19 @@ async function updateUserAvatarURL(userId, avatarURL) {
   }
 }
 
-export { getUserByEmail, createUser, updateUserToken, updateUserAvatarURL };
+async function markUserAsVerified(user) {
+  user.verificationToken = null;
+  user.verify = true;
+
+  await user.save();
+  return user;
+}
+
+export {
+  getUserByEmail,
+  getUserByVerifycationToken,
+  createUser,
+  updateUserToken,
+  updateUserAvatarURL,
+  markUserAsVerified,
+};
