@@ -55,6 +55,13 @@ export const User = sequelize.define("users", {
     defaultValue: null,
   },
   avatarURL: DataTypes.STRING,
+  verify: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  verificationToken: {
+    type: DataTypes.STRING,
+  },
 });
 
 // create table in DB if needed
