@@ -8,9 +8,12 @@ import {
   markUserAsVerified,
 } from "../services/authServices.js";
 import gravatar from "gravatar";
+import { nanoid } from "nanoid";
 import bcrypt from "bcrypt";
 import { createUserToken } from "../services/tokens.js";
 import { saveFile } from "../services/uploadFiles.js";
+import { sendVerificationEmail } from "../services/email.js";
+
 const saltRounds = 10;
 
 export const register = async (req, res, next) => {
@@ -34,8 +37,15 @@ export const register = async (req, res, next) => {
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const avatarURL = gravatar.url(email, { protocol: "https" });
-    const { subscription } = await createUser(email, hashedPassword, avatarURL);
+    const verificationToken = nanoid();
+    const { subscription } = await createUser(
+      email,
+      hashedPassword,
+      avatarURL,
+      verificationToken
+    );
 
+    sendVerificationEmail(email, getBaseUrl(req), verificationToken);
     res.status(201).json({
       user: {
         email: email,
@@ -69,6 +79,14 @@ export const login = async (req, res) => {
   if (!isValidPassword) {
     res.status(401).json({
       message: "Email or password is wrong",
+    });
+    return;
+  }
+
+  const isVerified = user.verify;
+  if (!isVerified) {
+    res.status(401).json({
+      message: "You have to verify your email first",
     });
     return;
   }
@@ -130,3 +148,10 @@ export const verifyUser = async (req, res) => {
     message: "Verification successful",
   });
 };
+
+function getBaseUrl(req) {
+  const protocol = req.protocol;
+  const host = req.get("host");
+
+  return `${protocol}://${host}`;
+}

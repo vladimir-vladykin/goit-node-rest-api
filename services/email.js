@@ -13,7 +13,14 @@ const config = {
 
 const transporter = nodemailer.createTransport(config);
 
-export function sendMail(subject, text, to) {
+export function sendVerificationEmail(email, baseUrl, token) {
+  const subject = "Verify your email";
+  const text = `Please follow <a href="${baseUrl}/api/auth/verify/${token}">this link</a> to verify your email.`;
+
+  sendMail(subject, text, email)
+}
+
+function sendMail(subject, text, to) {
   const emailOptions = {
     from: process.env.MAIL_USER,
     to: to,

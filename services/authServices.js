@@ -16,11 +16,12 @@ async function getUserByVerifycationToken(verificationToken) {
   });
 }
 
-async function createUser(email, hashedPassword, avatarURL) {
+async function createUser(email, hashedPassword, avatarURL, verificationToken) {
   const user = await User.create({
     email: email,
     password: hashedPassword,
     avatarURL: avatarURL,
+    verificationToken: verificationToken,
   });
 
   return user;
